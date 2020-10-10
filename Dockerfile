@@ -4,8 +4,8 @@ FROM lsiobase/alpine:3.12
 ARG BUILD_DATE
 ARG VERSION
 ARG TRANSMISSION_VERSION
-LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="aptalca"
+HEALTHCHECK --interval=60s --timeout=15s --start-period=180s \
+             CMD curl -LSs 'https://api.ipify.org' || kill 1
 
 RUN \
  echo "**** install packages ****" && \
@@ -57,7 +57,6 @@ RUN \
  echo "**** cleanup ****" && \
  rm -rf \
 	/tmp/*
-
 
 # copy local files
 COPY root/ /
