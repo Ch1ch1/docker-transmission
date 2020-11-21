@@ -4,10 +4,11 @@ FROM lsiobase/alpine:3.12
 ARG BUILD_DATE
 ARG VERSION
 ARG TRANSMISSION_VERSION
+
 HEALTHCHECK --interval=60s --timeout=15s --start-period=180s \
              CMD curl -LSs 'https://api.ipify.org' || kill 1
 
-RUN \
+             RUN \
               echo "**** install packages ****" && \
               apk add --no-cache \
              	curl \
