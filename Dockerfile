@@ -8,7 +8,7 @@ ARG TRANSMISSION_VERSION
 HEALTHCHECK --interval=60s --timeout=15s --start-period=180s \
              CMD curl -LSs 'https://api.ipify.org' || kill 1
 
-             RUN \
+RUN \
               echo "**** install packages ****" && \
               apk add --no-cache \
              	curl \
@@ -59,10 +59,9 @@ HEALTHCHECK --interval=60s --timeout=15s --start-period=180s \
               rm -rf \
              	/tmp/*
 
+# copy local files
+COPY root/ /
 
-             # copy local files
-             COPY root/ /
-
-             # ports and volumes
-             EXPOSE 9091 51413
-             VOLUME /config /downloads /watch
+# ports and volumes
+EXPOSE 9091 51413
+VOLUME /config /downloads /watch
