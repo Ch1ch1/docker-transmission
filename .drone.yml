@@ -15,7 +15,7 @@ steps:
     username: ch1ch1
     password:
       from_secret: dockerhub-password
-- name: notification
+- name: notification success
   image: plugins/webhook
   settings:
     urls:
@@ -23,15 +23,39 @@ steps:
     content_type: application/json
     template: |
       {
-       "message": "{{ repo.owner }} as updated {{ repo.name }} with {{ build.status }}.",
+        "extras": {
+        "client::display": {
+        "contentType": "text/markdown"
+        }
+      },
+       "message": "![](https://ch1ch1.fr/img/ok.webp) **{{ repo.owner }}** as updated **{{ repo.name }}**, result: **{{ build.status }}**.",
        "priority": 4,
        "title": "{{ repo.name }} build"
       }
   when:
-    status: [ success, failure ]
+    status: [ success ]
+- name: notification failure
+  image: plugins/webhook
+  settings:
+    urls:
+     from_secret: webhookgotify
+    content_type: application/json
+    template: |
+      {
+        "extras": {
+        "client::display": {
+        "contentType": "text/markdown"
+        }
+      },
+       "message": "![](https://ch1ch1.fr/img/nok.webp) **{{ repo.owner }}** as updated **{{ repo.name }}**, result: **{{ build.status }}**.",
+       "priority": 4,
+       "title": "{{ repo.name }} build"
+      }
+  when:
+    status: [ failure ]
 
 ---
 kind: signature
-hmac: b2bb1153542bff12501fbe9c0df222b277b68b3115f812dfdc5fa4434b43d53a
+hmac: 2f3bfbe89328bb04d02f83f83f3d67a6e33c89288041624bbd1df09860b8ce29
 
 ...
